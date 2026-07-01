@@ -2,32 +2,56 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 
-st.title("📄 Simple Document Classifier")
+# Knowledge Base
+data = {
+    "Question": [
+        "What is Python?",
+        "What is AI?",
+        "What is Machine Learning?",
+        "What is Streamlit?",
+        "What is Pandas?",
+        "What is NumPy?",
+        "Who developed Python?",
+        "What is Data Science?"
+    ],
 
-st.write("Enter a document to classify.")
-
-user_input = st.text_area("Enter Document")
-
-categories = {
-    "Sports": ["cricket", "football", "tennis", "match", "player", "score"],
-    "Technology": ["python", "ai", "artificial intelligence", "machine learning", "computer", "software"],
-    "Business": ["market", "company", "business", "profit", "startup", "investment"],
-    "Politics": ["government", "election", "minister", "parliament", "policy"],
-    "Entertainment": ["movie", "actor", "music", "film", "concert", "award"]
+    "Answer": [
+        "Python is a high-level programming language.",
+        "Artificial Intelligence enables machines to think and learn.",
+        "Machine Learning is a subset of Artificial Intelligence.",
+        "Streamlit is used to build web applications in Python.",
+        "Pandas is used for data analysis and manipulation.",
+        "NumPy is used for numerical computations with arrays.",
+        "Python was developed by Guido van Rossum.",
+        "Data Science is the process of extracting insights from data."
+    ]
 }
 
-if st.button("Predict"):
+df = pd.DataFrame(data)
 
-    if user_input.strip() == "":
-        st.warning("Please enter some text.")
+st.title("🤖 Simple Retrieval Chatbot")
+
+st.write("Ask a question from the knowledge base.")
+
+user_question = st.text_input("Enter your question")
+
+if st.button("Ask"):
+
+    if user_question.strip() == "":
+        st.warning("Please enter a question.")
 
     else:
-        text = user_input.lower()
-        prediction = "Unknown"
 
-        for category, keywords in categories.items():
-            if any(keyword in text for keyword in keywords):
-                prediction = category
+        found = False
+
+        for i in range(len(df)):
+
+            if user_question.lower() == df.loc[i, "Question"].lower():
+
+                st.success(df.loc[i, "Answer"])
+                found = True
                 break
 
-        st.success(f"Predicted Category: {prediction}")
+        if not found:
+
+            st.error("Sorry! I don't know the answer.")
