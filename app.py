@@ -1,57 +1,35 @@
 import streamlit as st
-import pandas as pd
 import numpy as np
+import pandas as pd
 
-# Knowledge Base
-data = {
-    "Question": [
-        "What is Python?",
-        "What is AI?",
-        "What is Machine Learning?",
-        "What is Streamlit?",
-        "What is Pandas?",
-        "What is NumPy?",
-        "Who developed Python?",
-        "What is Data Science?"
-    ],
+st.title("🖼️ Image Prediction Demo")
 
-    "Answer": [
-        "Python is a high-level programming language.",
-        "Artificial Intelligence enables machines to think and learn.",
-        "Machine Learning is a subset of Artificial Intelligence.",
-        "Streamlit is used to build web applications in Python.",
-        "Pandas is used for data analysis and manipulation.",
-        "NumPy is used for numerical computations with arrays.",
-        "Python was developed by Guido van Rossum.",
-        "Data Science is the process of extracting insights from data."
-    ]
-}
+uploaded_file = st.file_uploader(
+    "Upload an Image",
+    type=["jpg", "jpeg", "png"]
+)
 
-df = pd.DataFrame(data)
+if uploaded_file is not None:
 
-st.title("🤖 Simple Retrieval Chatbot")
+    st.image(uploaded_file, caption="Uploaded Image")
 
-st.write("Ask a question from the knowledge base.")
+    info = {
+        "Property": [
+            "File Name",
+            "File Type",
+            "File Size (KB)"
+        ],
+        "Value": [
+            uploaded_file.name,
+            uploaded_file.type,
+            round(uploaded_file.size / 1024, 2)
+        ]
+    }
 
-user_question = st.text_input("Enter your question")
+    df = pd.DataFrame(info)
 
-if st.button("Ask"):
+    st.subheader("Image Information")
 
-    if user_question.strip() == "":
-        st.warning("Please enter a question.")
+    st.table(df)
 
-    else:
-
-        found = False
-
-        for i in range(len(df)):
-
-            if user_question.lower() == df.loc[i, "Question"].lower():
-
-                st.success(df.loc[i, "Answer"])
-                found = True
-                break
-
-        if not found:
-
-            st.error("Sorry! I don't know the answer.")
+    st.success("Prediction: Demo Image")
